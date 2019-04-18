@@ -19,7 +19,7 @@
     "cz": "git-cz"
   },
   "peerDependencies": {
-    "@mapbox/mapbox-gl-draw": "^1.1.1",
+    "@mapbox/mapbox-gl-draw": "konturio/mapbox-gl-draw#builded",
     "@urbica/react-map-gl": "^1.0.0"
   },
   "devDependencies": {

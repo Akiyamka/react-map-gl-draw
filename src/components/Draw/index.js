@@ -201,7 +201,8 @@ export type Props = {
    * Fired when features are changed. (`draw.create`, `draw.delete`,
    * `draw.combine`, `draw.uncombine`, `draw.update`).
    */
-  onChange?: Function
+  onChange?: Function,
+  customControls?: Object,
 };
 
 class Draw extends React.PureComponent<Props> {
@@ -234,7 +235,8 @@ class Draw extends React.PureComponent<Props> {
     onDrawModeChange: null,
     onDrawRender: null,
     onDrawActionable: null,
-    onChange: null
+    onChange: null,
+    customControls: {}
   };
 
   componentDidMount() {
@@ -252,7 +254,8 @@ class Draw extends React.PureComponent<Props> {
         polygon: this.props.polygonControl,
         trash: this.props.trashControl,
         combine_features: this.props.combineFeaturesControl,
-        uncombine_features: this.props.uncombineFeaturesControl
+        uncombine_features: this.props.uncombineFeaturesControl,
+        ...this.props.customControls
       },
       displayControlsDefault: this.props.displayControlsDefault,
       styles: this.props.styles,

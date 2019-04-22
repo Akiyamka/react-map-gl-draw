@@ -14,7 +14,8 @@ module.exports = {
         'docs/basic-usage.md',
         'docs/set-initial-features.md',
         'docs/change-mode.md',
-        'docs/set-custom-controls.md'
+        'docs/set-custom-controls.md',
+        'docs/add-custom-modes.md'
       ],
       exampleMode: 'expand'
     },

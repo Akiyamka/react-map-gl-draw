@@ -243,6 +243,9 @@ class Draw extends React.PureComponent<Props> {
   };
 
   componentDidMount() {
+    const newModes = typeof this.props.modes === 'function'
+      ? this.props.modes(this.constructor.defaultProps.modes)
+      : this.props.modes
     // $FlowFixMe
     const map = this._map;
     const draw = new MapboxDraw({
@@ -262,12 +265,12 @@ class Draw extends React.PureComponent<Props> {
       },
       displayControlsDefault: this.props.displayControlsDefault,
       styles: this.props.styles,
-      modes: typeof this.props.modes === 'function'
-        ? this.props.modes(this.constructor.defaultProps.modes)
-        : this.props.modes,
+      modes: newModes,
       defaultMode: this.props.mode,
       userProperties: this.props.userProperties
     }, this.props.position);
+
+    // draw.modes = newModes // ??? WTF
 
     map.addControl(draw);
     map.on('draw.create', this._onDrawCreate);

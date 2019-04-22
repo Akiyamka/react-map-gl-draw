@@ -34,33 +34,36 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
 !function (e) {
   module.exports = e();
 }(function () {
-  return function e(t, n, o) {
-    function r(s, a) {
-      if (!n[s]) {
-        if (!t[s]) {
-          var c = "function" == typeof commonjsRequire && commonjsRequire;
-          if (!a && c) return c(s, !0);
-          if (i) return i(s, !0);
-          var u = new Error("Cannot find module '" + s + "'");
-          throw u.code = "MODULE_NOT_FOUND", u;
+  return function () {
+    function e(t, n, o) {
+      function r(s, a) {
+        if (!n[s]) {
+          if (!t[s]) {
+            var c = "function" == typeof commonjsRequire && commonjsRequire;
+            if (!a && c) return c(s, !0);
+            if (i) return i(s, !0);
+            var u = new Error("Cannot find module '" + s + "'");
+            throw u.code = "MODULE_NOT_FOUND", u;
+          }
+
+          var l = n[s] = {
+            exports: {}
+          };
+          t[s][0].call(l.exports, function (e) {
+            return r(t[s][1][e] || e);
+          }, l, l.exports, e, t, n, o);
         }
 
-        var l = n[s] = {
-          exports: {}
-        };
-        t[s][0].call(l.exports, function (e) {
-          var n = t[s][1][e];
-          return r(n || e);
-        }, l, l.exports, e, t, n, o);
+        return n[s].exports;
       }
 
-      return n[s].exports;
+      for (var i = "function" == typeof commonjsRequire && commonjsRequire, s = 0; s < o.length; s++) r(o[s]);
+
+      return r;
     }
 
-    for (var i = "function" == typeof commonjsRequire && commonjsRequire, s = 0; s < o.length; s++) r(o[s]);
-
-    return r;
-  }({
+    return e;
+  }()({
     1: [function (e, t, n) {
 
       var o = e("./src/setup"),
@@ -68,12 +71,13 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
           i = e("./src/api"),
           s = e("./src/constants"),
           a = function (e, t) {
+        console.debug("setupDraw draw", Object.keys(e && e.modes)), e = r(e), console.debug("setupOptions draw", Object.keys(e && e.modes));
         var n = {
-          options: e = r(e)
+          options: e
         };
         t = i(n, t), n.api = t;
         var a = o(n);
-        return t.onAdd = a.onAdd, t.onRemove = a.onRemove, t.types = s.types, t.options = e, t;
+        return console.debug("runSetup", n.options && Object.keys(n.options.modes)), t.onAdd = a.onAdd, t.onRemove = a.onRemove, t.types = s.types, t.options = e, console.debug("api.options", t.options && Object.keys(t.options.modes)), t;
       };
 
       t.exports = function (e) {
@@ -219,7 +223,7 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
     }, {
       "./flatten": 4,
       "@mapbox/geojson-normalize": 7,
-      "geojson-flatten": 13
+      "geojson-flatten": 14
     }],
     6: [function (e, t, n) {
       function o(e) {
@@ -311,7 +315,7 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       };
     }, {
       "./object": 9,
-      "jsonlint-lines": 15
+      "jsonlint-lines": 11
     }],
     9: [function (e, t, n) {
       var o = e("./rhr");
@@ -582,227 +586,6 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       };
     }, {}],
     11: [function (e, t, n) {
-
-      function o(e, t) {
-        this.x = e, this.y = t;
-      }
-
-      t.exports = o, o.prototype = {
-        clone: function () {
-          return new o(this.x, this.y);
-        },
-        add: function (e) {
-          return this.clone()._add(e);
-        },
-        sub: function (e) {
-          return this.clone()._sub(e);
-        },
-        multByPoint: function (e) {
-          return this.clone()._multByPoint(e);
-        },
-        divByPoint: function (e) {
-          return this.clone()._divByPoint(e);
-        },
-        mult: function (e) {
-          return this.clone()._mult(e);
-        },
-        div: function (e) {
-          return this.clone()._div(e);
-        },
-        rotate: function (e) {
-          return this.clone()._rotate(e);
-        },
-        rotateAround: function (e, t) {
-          return this.clone()._rotateAround(e, t);
-        },
-        matMult: function (e) {
-          return this.clone()._matMult(e);
-        },
-        unit: function () {
-          return this.clone()._unit();
-        },
-        perp: function () {
-          return this.clone()._perp();
-        },
-        round: function () {
-          return this.clone()._round();
-        },
-        mag: function () {
-          return Math.sqrt(this.x * this.x + this.y * this.y);
-        },
-        equals: function (e) {
-          return this.x === e.x && this.y === e.y;
-        },
-        dist: function (e) {
-          return Math.sqrt(this.distSqr(e));
-        },
-        distSqr: function (e) {
-          var t = e.x - this.x,
-              n = e.y - this.y;
-          return t * t + n * n;
-        },
-        angle: function () {
-          return Math.atan2(this.y, this.x);
-        },
-        angleTo: function (e) {
-          return Math.atan2(this.y - e.y, this.x - e.x);
-        },
-        angleWith: function (e) {
-          return this.angleWithSep(e.x, e.y);
-        },
-        angleWithSep: function (e, t) {
-          return Math.atan2(this.x * t - this.y * e, this.x * e + this.y * t);
-        },
-        _matMult: function (e) {
-          var t = e[0] * this.x + e[1] * this.y,
-              n = e[2] * this.x + e[3] * this.y;
-          return this.x = t, this.y = n, this;
-        },
-        _add: function (e) {
-          return this.x += e.x, this.y += e.y, this;
-        },
-        _sub: function (e) {
-          return this.x -= e.x, this.y -= e.y, this;
-        },
-        _mult: function (e) {
-          return this.x *= e, this.y *= e, this;
-        },
-        _div: function (e) {
-          return this.x /= e, this.y /= e, this;
-        },
-        _multByPoint: function (e) {
-          return this.x *= e.x, this.y *= e.y, this;
-        },
-        _divByPoint: function (e) {
-          return this.x /= e.x, this.y /= e.y, this;
-        },
-        _unit: function () {
-          return this._div(this.mag()), this;
-        },
-        _perp: function () {
-          var e = this.y;
-          return this.y = this.x, this.x = -e, this;
-        },
-        _rotate: function (e) {
-          var t = Math.cos(e),
-              n = Math.sin(e),
-              o = t * this.x - n * this.y,
-              r = n * this.x + t * this.y;
-          return this.x = o, this.y = r, this;
-        },
-        _rotateAround: function (e, t) {
-          var n = Math.cos(e),
-              o = Math.sin(e),
-              r = t.x + n * (this.x - t.x) - o * (this.y - t.y),
-              i = t.y + o * (this.x - t.x) + n * (this.y - t.y);
-          return this.x = r, this.y = i, this;
-        },
-        _round: function () {
-          return this.x = Math.round(this.x), this.y = Math.round(this.y), this;
-        }
-      }, o.convert = function (e) {
-        return e instanceof o ? e : Array.isArray(e) ? new o(e[0], e[1]) : e;
-      };
-    }, {}],
-    12: [function (e, t, n) {}, {}],
-    13: [function (e, t, n) {
-      function o(e) {
-        switch (e && e.type || null) {
-          case "FeatureCollection":
-            return e.features = e.features.reduce(function (e, t) {
-              return e.concat(o(t));
-            }, []), e;
-
-          case "Feature":
-            return e.geometry ? o(e.geometry).map(function (t) {
-              return {
-                type: "Feature",
-                properties: JSON.parse(JSON.stringify(e.properties)),
-                geometry: t
-              };
-            }) : e;
-
-          case "MultiPoint":
-            return e.coordinates.map(function (e) {
-              return {
-                type: "Point",
-                coordinates: e
-              };
-            });
-
-          case "MultiPolygon":
-            return e.coordinates.map(function (e) {
-              return {
-                type: "Polygon",
-                coordinates: e
-              };
-            });
-
-          case "MultiLineString":
-            return e.coordinates.map(function (e) {
-              return {
-                type: "LineString",
-                coordinates: e
-              };
-            });
-
-          case "GeometryCollection":
-            return e.geometries.map(o).reduce(function (e, t) {
-              return e.concat(t);
-            }, []);
-
-          case "Point":
-          case "Polygon":
-          case "LineString":
-            return [e];
-        }
-      }
-
-      t.exports = o;
-    }, {}],
-    14: [function (e, t, n) {
-      var o = t.exports = function (e, t) {
-        if (t || (t = 16), void 0 === e && (e = 128), e <= 0) return "0";
-
-        for (var n = Math.log(Math.pow(2, e)) / Math.log(t), r = 2; n === 1 / 0; r *= 2) n = Math.log(Math.pow(2, e / r)) / Math.log(t) * r;
-
-        for (var i = n - Math.floor(n), s = "", r = 0; r < Math.floor(n); r++) s = (c = Math.floor(Math.random() * t).toString(t)) + s;
-
-        if (i) {
-          var a = Math.pow(t, i),
-              c = Math.floor(Math.random() * a).toString(t);
-          s = c + s;
-        }
-
-        var u = parseInt(s, t);
-        return u !== 1 / 0 && u >= Math.pow(2, e) ? o(e, t) : s;
-      };
-
-      o.rack = function (e, t, n) {
-        var r = function (r) {
-          var s = 0;
-
-          do {
-            if (s++ > 10) {
-              if (!n) throw new Error("too many ID collisions, use more bits");
-              e += n;
-            }
-
-            var a = o(e, t);
-          } while (Object.hasOwnProperty.call(i, a));
-
-          return i[a] = r, a;
-        },
-            i = r.hats = {};
-
-        return r.get = function (e) {
-          return r.hats[e];
-        }, r.set = function (e, t) {
-          return r.hats[e] = t, r;
-        }, r.bits = e || 128, r.base = t || 16, r;
-      };
-    }, {}],
-    15: [function (e, t, n) {
       (function (o) {
         var r = function () {
           function e() {
@@ -1321,9 +1104,229 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       }).call(this, e("_process"));
     }, {
       _process: 18,
-      fs: 12,
+      fs: 13,
       path: 17
     }],
+    12: [function (e, t, n) {
+
+      function o(e, t) {
+        this.x = e, this.y = t;
+      }
+
+      t.exports = o, o.prototype = {
+        clone: function () {
+          return new o(this.x, this.y);
+        },
+        add: function (e) {
+          return this.clone()._add(e);
+        },
+        sub: function (e) {
+          return this.clone()._sub(e);
+        },
+        multByPoint: function (e) {
+          return this.clone()._multByPoint(e);
+        },
+        divByPoint: function (e) {
+          return this.clone()._divByPoint(e);
+        },
+        mult: function (e) {
+          return this.clone()._mult(e);
+        },
+        div: function (e) {
+          return this.clone()._div(e);
+        },
+        rotate: function (e) {
+          return this.clone()._rotate(e);
+        },
+        rotateAround: function (e, t) {
+          return this.clone()._rotateAround(e, t);
+        },
+        matMult: function (e) {
+          return this.clone()._matMult(e);
+        },
+        unit: function () {
+          return this.clone()._unit();
+        },
+        perp: function () {
+          return this.clone()._perp();
+        },
+        round: function () {
+          return this.clone()._round();
+        },
+        mag: function () {
+          return Math.sqrt(this.x * this.x + this.y * this.y);
+        },
+        equals: function (e) {
+          return this.x === e.x && this.y === e.y;
+        },
+        dist: function (e) {
+          return Math.sqrt(this.distSqr(e));
+        },
+        distSqr: function (e) {
+          var t = e.x - this.x,
+              n = e.y - this.y;
+          return t * t + n * n;
+        },
+        angle: function () {
+          return Math.atan2(this.y, this.x);
+        },
+        angleTo: function (e) {
+          return Math.atan2(this.y - e.y, this.x - e.x);
+        },
+        angleWith: function (e) {
+          return this.angleWithSep(e.x, e.y);
+        },
+        angleWithSep: function (e, t) {
+          return Math.atan2(this.x * t - this.y * e, this.x * e + this.y * t);
+        },
+        _matMult: function (e) {
+          var t = e[0] * this.x + e[1] * this.y,
+              n = e[2] * this.x + e[3] * this.y;
+          return this.x = t, this.y = n, this;
+        },
+        _add: function (e) {
+          return this.x += e.x, this.y += e.y, this;
+        },
+        _sub: function (e) {
+          return this.x -= e.x, this.y -= e.y, this;
+        },
+        _mult: function (e) {
+          return this.x *= e, this.y *= e, this;
+        },
+        _div: function (e) {
+          return this.x /= e, this.y /= e, this;
+        },
+        _multByPoint: function (e) {
+          return this.x *= e.x, this.y *= e.y, this;
+        },
+        _divByPoint: function (e) {
+          return this.x /= e.x, this.y /= e.y, this;
+        },
+        _unit: function () {
+          return this._div(this.mag()), this;
+        },
+        _perp: function () {
+          var e = this.y;
+          return this.y = this.x, this.x = -e, this;
+        },
+        _rotate: function (e) {
+          var t = Math.cos(e),
+              n = Math.sin(e),
+              o = t * this.x - n * this.y,
+              r = n * this.x + t * this.y;
+          return this.x = o, this.y = r, this;
+        },
+        _rotateAround: function (e, t) {
+          var n = Math.cos(e),
+              o = Math.sin(e),
+              r = t.x + n * (this.x - t.x) - o * (this.y - t.y),
+              i = t.y + o * (this.x - t.x) + n * (this.y - t.y);
+          return this.x = r, this.y = i, this;
+        },
+        _round: function () {
+          return this.x = Math.round(this.x), this.y = Math.round(this.y), this;
+        }
+      }, o.convert = function (e) {
+        return e instanceof o ? e : Array.isArray(e) ? new o(e[0], e[1]) : e;
+      };
+    }, {}],
+    13: [function (e, t, n) {}, {}],
+    14: [function (e, t, n) {
+      t.exports = function e(t) {
+        switch (t && t.type || null) {
+          case "FeatureCollection":
+            return t.features = t.features.reduce(function (t, n) {
+              return t.concat(e(n));
+            }, []), t;
+
+          case "Feature":
+            return t.geometry ? e(t.geometry).map(function (e) {
+              var n = {
+                type: "Feature",
+                properties: JSON.parse(JSON.stringify(t.properties)),
+                geometry: e
+              };
+              return void 0 !== t.id && (n.id = t.id), n;
+            }) : t;
+
+          case "MultiPoint":
+            return t.coordinates.map(function (e) {
+              return {
+                type: "Point",
+                coordinates: e
+              };
+            });
+
+          case "MultiPolygon":
+            return t.coordinates.map(function (e) {
+              return {
+                type: "Polygon",
+                coordinates: e
+              };
+            });
+
+          case "MultiLineString":
+            return t.coordinates.map(function (e) {
+              return {
+                type: "LineString",
+                coordinates: e
+              };
+            });
+
+          case "GeometryCollection":
+            return t.geometries.map(e).reduce(function (e, t) {
+              return e.concat(t);
+            }, []);
+
+          case "Point":
+          case "Polygon":
+          case "LineString":
+            return [t];
+        }
+      };
+    }, {}],
+    15: [function (e, t, n) {
+      var o = t.exports = function (e, t) {
+        if (t || (t = 16), void 0 === e && (e = 128), e <= 0) return "0";
+
+        for (var n = Math.log(Math.pow(2, e)) / Math.log(t), r = 2; n === 1 / 0; r *= 2) n = Math.log(Math.pow(2, e / r)) / Math.log(t) * r;
+
+        for (var i = n - Math.floor(n), s = "", r = 0; r < Math.floor(n); r++) s = (c = Math.floor(Math.random() * t).toString(t)) + s;
+
+        if (i) {
+          var a = Math.pow(t, i),
+              c = Math.floor(Math.random() * a).toString(t);
+          s = c + s;
+        }
+
+        var u = parseInt(s, t);
+        return u !== 1 / 0 && u >= Math.pow(2, e) ? o(e, t) : s;
+      };
+
+      o.rack = function (e, t, n) {
+        var r = function (r) {
+          var s = 0;
+
+          do {
+            if (s++ > 10) {
+              if (!n) throw new Error("too many ID collisions, use more bits");
+              e += n;
+            }
+
+            var a = o(e, t);
+          } while (Object.hasOwnProperty.call(i, a));
+
+          return i[a] = r, a;
+        },
+            i = r.hats = {};
+
+        return r.get = function (e) {
+          return r.hats[e];
+        }, r.set = function (e, t) {
+          return r.hats[e] = t, r;
+        }, r.bits = e || 128, r.base = t || 16, r;
+      };
+    }, {}],
     16: [function (e, t, n) {
       (function (e) {
         function o(e, t) {
@@ -1935,7 +1938,24 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
           return e;
         }
 
-        function o(e, t) {
+        function o(e) {
+          "string" != typeof e && (e += "");
+          var t,
+              n = 0,
+              o = -1,
+              r = !0;
+
+          for (t = e.length - 1; t >= 0; --t) if (47 === e.charCodeAt(t)) {
+            if (!r) {
+              n = t + 1;
+              break;
+            }
+          } else -1 === o && (r = !1, o = t + 1);
+
+          return -1 === o ? "" : e.slice(n, o);
+        }
+
+        function r(e, t) {
           if (e.filter) return e.filter(t);
 
           for (var n = [], o = 0; o < e.length; o++) t(e[o], o, e) && n.push(e[o]);
@@ -1943,32 +1963,27 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
           return n;
         }
 
-        var r = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/,
-            i = function (e) {
-          return r.exec(e).slice(1);
-        };
-
         n.resolve = function () {
-          for (var n = "", r = !1, i = arguments.length - 1; i >= -1 && !r; i--) {
+          for (var n = "", o = !1, i = arguments.length - 1; i >= -1 && !o; i--) {
             var s = i >= 0 ? arguments[i] : e.cwd();
             if ("string" != typeof s) throw new TypeError("Arguments to path.resolve must be strings");
-            s && (n = s + "/" + n, r = "/" === s.charAt(0));
+            s && (n = s + "/" + n, o = "/" === s.charAt(0));
           }
 
-          return n = t(o(n.split("/"), function (e) {
+          return n = t(r(n.split("/"), function (e) {
             return !!e;
-          }), !r).join("/"), (r ? "/" : "") + n || ".";
+          }), !o).join("/"), (o ? "/" : "") + n || ".";
         }, n.normalize = function (e) {
-          var r = n.isAbsolute(e),
-              i = "/" === s(e, -1);
-          return (e = t(o(e.split("/"), function (e) {
+          var o = n.isAbsolute(e),
+              s = "/" === i(e, -1);
+          return (e = t(r(e.split("/"), function (e) {
             return !!e;
-          }), !r).join("/")) || r || (e = "."), e && i && (e += "/"), (r ? "/" : "") + e;
+          }), !o).join("/")) || o || (e = "."), e && s && (e += "/"), (o ? "/" : "") + e;
         }, n.isAbsolute = function (e) {
           return "/" === e.charAt(0);
         }, n.join = function () {
           var e = Array.prototype.slice.call(arguments, 0);
-          return n.normalize(o(e, function (e, t) {
+          return n.normalize(r(e, function (e, t) {
             if ("string" != typeof e) throw new TypeError("Arguments to path.join must be strings");
             return e;
           }).join("/"));
@@ -1992,17 +2007,33 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
 
           return (u = u.concat(i.slice(a))).join("/");
         }, n.sep = "/", n.delimiter = ":", n.dirname = function (e) {
-          var t = i(e),
-              n = t[0],
-              o = t[1];
-          return n || o ? (o && (o = o.substr(0, o.length - 1)), n + o) : ".";
+          if ("string" != typeof e && (e += ""), 0 === e.length) return ".";
+
+          for (var t = e.charCodeAt(0), n = 47 === t, o = -1, r = !0, i = e.length - 1; i >= 1; --i) if (47 === (t = e.charCodeAt(i))) {
+            if (!r) {
+              o = i;
+              break;
+            }
+          } else r = !1;
+
+          return -1 === o ? n ? "/" : "." : n && 1 === o ? "/" : e.slice(0, o);
         }, n.basename = function (e, t) {
-          var n = i(e)[2];
+          var n = o(e);
           return t && n.substr(-1 * t.length) === t && (n = n.substr(0, n.length - t.length)), n;
         }, n.extname = function (e) {
-          return i(e)[3];
+          "string" != typeof e && (e += "");
+
+          for (var t = -1, n = 0, o = -1, r = !0, i = 0, s = e.length - 1; s >= 0; --s) {
+            var a = e.charCodeAt(s);
+            if (47 !== a) -1 === o && (r = !1, o = s + 1), 46 === a ? -1 === t ? t = s : 1 !== i && (i = 1) : -1 !== t && (i = -1);else if (!r) {
+              n = s + 1;
+              break;
+            }
+          }
+
+          return -1 === t || -1 === o || 0 === i || 1 === i && t === o - 1 && t === n + 1 ? "" : e.slice(t, o);
         };
-        var s = "b" === "ab".substr(-1) ? function (e, t, n) {
+        var i = "b" === "ab".substr(-1) ? function (e, t, n) {
           return e.substr(t, n);
         } : function (e, t, n) {
           return t < 0 && (t = e.length + t), e.substr(t, n);
@@ -2489,7 +2520,7 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       "./lib/string_sets_are_equal": 48,
       "@mapbox/geojson-normalize": 7,
       "@mapbox/geojsonhint": 8,
-      hat: 14,
+      hat: 15,
       "lodash.isequal": 16
     }],
     23: [function (e, t, n) {
@@ -2790,7 +2821,7 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       }, t.exports = i;
     }, {
       "../constants": 23,
-      hat: 14
+      hat: 15
     }],
     26: [function (e, t, n) {
 
@@ -2879,7 +2910,7 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       "./line_string": 26,
       "./point": 28,
       "./polygon": 29,
-      hat: 14
+      hat: 15
     }],
     28: [function (e, t, n) {
 
@@ -3360,7 +3391,7 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
         return new o(e.clientX - n.left - (t.clientLeft || 0), e.clientY - n.top - (t.clientTop || 0));
       };
     }, {
-      "@mapbox/point-geometry": 11
+      "@mapbox/point-geometry": 12
     }],
     45: [function (e, t, n) {
 
@@ -4502,9 +4533,10 @@ var mapboxGlDraw = createCommonjsModule(function (module, exports) {
       };
 
       t.exports = function () {
-        var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {},
-            t = r(e);
-        return e.controls || (t.controls = {}), !1 === e.displayControlsDefault ? t.controls = r(c, e.controls) : t.controls = r(a, e.controls), t = r(s, t), t.styles = o(t.styles, "cold").concat(o(t.styles, "hot")), t;
+        var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+        console.debug("Setup", e && e.modes);
+        var t = r(e);
+        return e.controls || (t.controls = {}), !1 === e.displayControlsDefault ? t.controls = r(c, e.controls) : t.controls = r(a, e.controls), t = r(s, t), t.styles = o(t.styles, "cold").concat(o(t.styles, "hot")), console.debug("Setup with defaults", t && t.modes), t;
       };
     }, {
       "./constants": 23,
@@ -7625,7 +7657,8 @@ class Draw extends React.PureComponent {
   }
 
   componentDidMount() {
-    // $FlowFixMe
+    const newModes = typeof this.props.modes === 'function' ? this.props.modes(this.constructor.defaultProps.modes) : this.props.modes; // $FlowFixMe
+
     const map = this._map;
     const draw = new mapboxGlDraw({
       keybindings: this.props.keybindings,
@@ -7644,10 +7677,11 @@ class Draw extends React.PureComponent {
       },
       displayControlsDefault: this.props.displayControlsDefault,
       styles: this.props.styles,
-      modes: this.props.modes,
+      modes: newModes,
       defaultMode: this.props.mode,
       userProperties: this.props.userProperties
-    }, this.props.position);
+    }, this.props.position); // draw.modes = newModes // ??? WTF
+
     map.addControl(draw);
     map.on('draw.create', this._onDrawCreate);
     map.on('draw.create', this._onChange);

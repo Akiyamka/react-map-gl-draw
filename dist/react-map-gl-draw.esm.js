@@ -1,4 +1,4 @@
-import { PureComponent, createElement } from 'react';
+import { Component, createElement } from 'react';
 import { MapContext } from '@urbica/react-map-gl';
 
 function _defineProperty(obj, key, value) {
@@ -7580,7 +7580,7 @@ var modes = {
   draw_line_string: draw_line_string
 };
 
-class Draw extends PureComponent {
+class Draw extends Component {
   constructor(...args) {
     super(...args);
 
@@ -7652,7 +7652,7 @@ class Draw extends PureComponent {
     });
   }
 
-  componentDidMount() {
+  _initPlugin() {
     const newModes = typeof this.props.modes === 'function' ? this.props.modes(this.constructor.defaultProps.modes) : this.props.modes; // $FlowFixMe
 
     const map = this._map;
@@ -7712,6 +7712,8 @@ class Draw extends PureComponent {
       // $FlowFixMe
       this._draw.changeMode(this.props.mode, this.props.modeOptions);
     }
+
+    if (this._map) this._initPlugin();
   }
 
   componentWillUnmount() {

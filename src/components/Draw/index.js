@@ -208,7 +208,7 @@ export type Props = {
   customControls?: Object,
 };
 
-class Draw extends React.PureComponent<Props> {
+class Draw extends React.Component<Props> {
   static defaultProps = {
     position: 'top-right',
     keybindings: true,
@@ -242,7 +242,7 @@ class Draw extends React.PureComponent<Props> {
     customControls: {}
   };
 
-  componentDidMount() {
+  _initPlugin() {
     const newModes = typeof this.props.modes === 'function'
       ? this.props.modes(this.constructor.defaultProps.modes)
       : this.props.modes
@@ -306,6 +306,8 @@ class Draw extends React.PureComponent<Props> {
       // $FlowFixMe
       this._draw.changeMode(this.props.mode, this.props.modeOptions);
     }
+
+    if (this._map) this._initPlugin();
   }
 
   componentWillUnmount(): void {
